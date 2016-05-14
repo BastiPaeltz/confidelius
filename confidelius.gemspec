@@ -3,14 +3,19 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'confidelius/version'
 
+DESCRIPTION = <<DESC
+Deal with confidential data more securly.
+Read more on the Github README.
+DESC
+
 Gem::Specification.new do |spec|
   spec.name          = "confidelius"
   spec.version       = Confidelius::VERSION
   spec.authors       = ["Sebastian Pältz"]
   spec.email         = ["basti@kaderx.com"]
 
-  spec.summary       = "Does stuff"
-  spec.description   = "Describe that stuff"
+  spec.summary       = "Deal with confidential data more securly"
+  spec.description   = DESCRIPTION
   spec.homepage      = "https://github.com/BastiPaeltz/confidelius.git"
   spec.license       = "MIT"
 
