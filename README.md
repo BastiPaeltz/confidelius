@@ -1,41 +1,86 @@
-# Confidelius
+# confidelius
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/confidelius`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Motivation
 
-TODO: Delete this and the text above, and describe your gem
+1. Dealing with confidential data on your local machine can be done wrong very easily and many dont think about security but rather about pragmatism ... what if there could be a way to have both?
+2. It's even harder to deal with stuff that might get checked into soure control
 
-## Installation
+## What are the problems
 
-Add this line to your application's Gemfile:
+- you enter confidential data without silent/unix style mode
+- you leave confidential data in clear text in some files, sometimes you need them to be there
+- you put them in ENV variables where people could read them browsing through your shell history if you're not cautious or 
+- often times we work with confidential data in our projects (passwords, access keys etc.) and they might get checked into source control
 
-```ruby
-gem 'confidelius'
-```
+## Idea
 
-And then execute:
+--> session-based, keeps track of your passwords/dummy passwords
+    --> save feature, so once you start a saved session later on, state of where you were is restored  
+--> once session is left, dummy passwords are put in place again  
+--> change environment just for the session  
+--> silent read of passwords ALWAYS  
+--> password-lock files  
+--> option to git pre-commit hook, so you can be sure you checked nothing  wrong into source control, because it keeps track of your  
 
-    $ bundle
+## CLI
 
-Or install it yourself as:
+- new
+- start/stop -s "php" -p PROMPT
+- list
+- env
+- file -times 4 or -lines 35,23 pattern="^foobar$" -i
+- save
+- hook --soft
+- import/export
 
-    $ gem install confidelius
+### new
+- prompts you for a master password
+  - is used to encrypt the database
+- creates the database (sqlite)
 
-## Usage
+#### database schema
+session: 
+- name(text)
 
-TODO: Write usage instructions here
+operations:
+- session_id (foreign key)
+- date(timestamp)
+- location(string)
+- type(string)
+- state_before(text)
+- state_after(text)
 
-## Development
+file:
+- location(string)
+- used_pattern(string)
+- 
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### start/stop
+- starts/stops a session
+- creates a session if not already defined
+- use -s to name the session
+- updates PS1
+- decrypts(start) or encrypts(stop) database
+  - use --convenient flag to 'start', to indicate that same password should be used
+- stop rolls back all the changes
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### list
+- lists all saved sessions
 
-## Contributing
+### save 
+- saves the session to the database
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/confidelius.
+### file PATTERN
+- enter (silent read) state_after text to replace PATTERN with
+- restrict times or lines with arguments
 
+### env VAR_NAME
+- enter (silent read) state_after text for env variable
+- state gets saved to database
 
-## License
+### hook 
+- --hard indicates that hook failes if it cant read database
+- automatically create git hooks for all files
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+### import/export
+- ...

@@ -1,5 +1,5 @@
-require "confidelius/version"
+require "docopt"
+require "sqlite3"
 
-module Confidelius
-  # Your code goes here...
-end
+require "confidelius/version"
+require "confidelius/cli"
