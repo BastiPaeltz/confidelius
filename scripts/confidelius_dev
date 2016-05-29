@@ -3,4 +3,5 @@
 require "bundler/setup"
 require "confidelius"
 
-Confidelius::CLI.parse()
+Confidelius::Helper.setup_db_env
+Confidelius::CLI.parse

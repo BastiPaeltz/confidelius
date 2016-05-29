@@ -5,6 +5,7 @@ require "confidelius/version"
 require "confidelius/cli"
 require "confidelius/base"
 require "confidelius/session"
+require "confidelius/helper"
 
 require "confidelius/actions/action"
 require "confidelius/actions/environment"

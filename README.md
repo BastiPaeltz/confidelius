@@ -41,19 +41,24 @@
 #### database schema
 session: 
 - name(text)
+- (some config values)
 
 operations:
-- session_id (foreign key)
+- id
+- session_id
 - date(timestamp)
-- location(string)
-- type(string)
-- state_before(text)
-- state_after(text)
+
+env:
+- operation_id
+- before
+- after
 
 file:
+- operation_id
 - location(string)
 - used_pattern(string)
-- 
+- before
+- after
 
 ### start/stop
 - starts/stops a session
