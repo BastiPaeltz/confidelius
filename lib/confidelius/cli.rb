@@ -5,10 +5,11 @@ module Confidelius
 
     Usage:
       confidelius init
-      confidelius start <session-name> [-p <prompt>]
+      confidelius start <session-name>
       confidelius stop [--save|--no-save] 
       confidelius list
-      confidelius save 
+      confidelius status
+      confidelius save
       confidelius hook [--soft]
       confidelius env <environment-variable>
       confidelius file <regex-pattern> [-i] [--times <amount>] [--lines <start-line> <stop-line>]
@@ -45,30 +46,40 @@ module Confidelius
 
     def self.run_action(requested_action, required_args, optional_args)
       case requested_action
-      when "init" then Confidelius::Base.init
-      when "start" then Confidelius::Session.start(required_args, optional_args)
-      when "stop" then Confidelius::Session.stop(optional_args)
-      when "save" then Confidelius::Session.save
-      when "list" then Confidelius::Base.list
-      when "hook" then Confidelius::HookAction.execute(optional_args)
-      when "env"  then Confidelius::EnvironmentAction.execute(required_args)
-      when "file" then Confidelius::FileAction.execute(required_args, optional_args)
+        when 'init' then
+          Confidelius::Base.instance.init
+        when 'start' then
+          Confidelius::Session.instance.start(required_args)
+        when 'stop' then
+          Confidelius::Session.instance.stop(optional_args)
+        when 'save' then
+          Confidelius::Session.save
+        when 'status' then
+          Confidelius::Session.instance.status
+        when 'list' then
+          Confidelius::Base.instance.list
+        when 'hook' then
+          Confidelius::HookAction.execute(optional_args)
+        when 'env' then
+          Confidelius::EnvironmentAction.execute(required_args)
+        when 'file' then
+          Confidelius::FileAction.execute(required_args, optional_args)
       end
     end
 
     def self.filter_relevant_opts(command_line_opts)
-      action = ""
+      action = ''
       required_args = {}
       optional_args = {}
 
       filtered_opts = command_line_opts.reject do |_, val|
         val.nil? or val == false
       end
-      
+
       filtered_opts.each do |key, val|
-        if key.start_with?("<")
+        if key.start_with?('<')
           required_args[key] = val
-        elsif key.start_with?("-")
+        elsif key.start_with?('-')
           optional_args[key] = val
         else
           action = key

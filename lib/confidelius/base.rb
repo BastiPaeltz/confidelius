@@ -1,20 +1,23 @@
 module Confidelius
-  class Base
-    @@db
+  class Base < DatabaseUser
+    include Singleton
 
-    def self.init
-      @@db = SQLite3::Database.new(ENV['_confidelius_db'])
+    def init
       setup_tables
     end
 
 
-    def self.list
+    def list
+      @db.execute('SELECT name from Session') do |row|
+        puts row
+      end
     end
 
-    def self.setup_tables
+    def setup_tables
       create_table_queries = [<<-SESSION, <<-OPERATION, <<-ENV, <<-FILE]
         CREATE TABLE IF NOT EXISTS Session(
-          name TEXT PRIMARY KEY
+          name TEXT PRIMARY KEY,
+          active INTEGER
         )
       SESSION
         CREATE TABLE IF NOT EXISTS Operation(
@@ -41,13 +44,13 @@ module Confidelius
         )
       FILE
       begin
-        create_table_queries.each { |query| @@db.execute(query) }
-        p "Created database at #{ENV['_confidelius_db']}"
+        create_table_queries.each { |query| @db.execute(query) }
+        puts "Created database at #{ENV['_confidelius_db']}"
       rescue SQLite3::Exception => e
-        p "Failed to create database. Reason #{e.message}"
+        puts 'Failed to create database. Reason:', "#{e.message}"
       end
     end
 
-    private_class_method :setup_tables
+    private :setup_tables
   end
 end

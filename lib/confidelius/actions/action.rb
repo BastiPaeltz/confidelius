@@ -1,5 +1,5 @@
 module Confidelius
-  class Action
+  class Action < DatabaseUser
   	def self.execute
   	end
   end

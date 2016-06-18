@@ -1,12 +1,28 @@
 module Confidelius
-  class Session
-  	def self.start
-  	end
+  class Session < DatabaseUser
+    include Singleton
 
-  	def self.stop
-  	end
+    # @param [Hash] required_args
+    def start(required_args)
+      if session_is_defined(required_args['session-name'])
 
-  	def self.save
-  	end
+      end
+    end
+
+
+    def stop(optional_args)
+    end
+
+    def save
+    end
+
+    def update_prompt(prompt, custom=false)
+    end
+
+    def session_is_defined(name)
+    end
+
+    private :session_is_defined
+
   end
 end
