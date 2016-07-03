@@ -10,3 +10,5 @@
 /.idea
 /res
 /projectFilesBackup
+.tags
+.tags_sorted_by_file

@@ -6,13 +6,13 @@ module Confidelius
     Usage:
       confidelius init
       confidelius start <session-name>
-      confidelius stop [--save|--no-save] 
+      confidelius stop [--save|--no-save]
       confidelius list
       confidelius status
       confidelius save
       confidelius hook [--soft]
       confidelius env <environment-variable>
-      confidelius file <regex-pattern> [-i] [--times <amount>] [--lines <start-line> <stop-line>]
+      confidelius file <regex-pattern> [-i] [--times=<amount>] [--lines=<start-line>-<stop-line>]
       confidelius -h | --help
       confidelius --version
 
@@ -20,14 +20,16 @@ module Confidelius
       -h --help     Show this screen.
       -p            Specify a custom prompt (PS1), when starting a session.
       --save        stopping a session asks if changes should be saved.
-                    Specify this flag, when this should be done without asking. 
+                    Specify this flag, when this should be done without asking.
       --no-save     Opposite of --save
-      --soft        By default, hook aborts a git commit when it finds violations,
-                    use this flag, when it should only print a warning.
-      -i            Interactive mode, let the user choose for every match, if this should
-                    be replaced or not
-      --times       Specify, how many times exactly a match should be replaced
-      --lines       Specify, between which lines matches should be replaced      
+      --soft        By default, hook aborts a git commit when it finds
+                    violations, use this flag to only print a warning.
+      -i            Interactive mode, let the user choose for every match,
+                    if this should be replaced or not
+      --times=<amount>                  Specify, how many times exactly a match
+                                        should be replaced
+      --lines=<start-line>-<stop-line>  Specify, between which lines matches
+                                        should be replaced
 
     MANPAGE
 
@@ -53,17 +55,17 @@ module Confidelius
         when 'stop' then
           Confidelius::Session.instance.stop(optional_args)
         when 'save' then
-          Confidelius::Session.save
+          Confidelius::Session.instance.save
         when 'status' then
           Confidelius::Session.instance.status
         when 'list' then
           Confidelius::Base.instance.list
         when 'hook' then
-          Confidelius::HookAction.execute(optional_args)
+          Confidelius::HookAction.instance.execute(optional_args)
         when 'env' then
-          Confidelius::EnvironmentAction.execute(required_args)
+          Confidelius::EnvironmentAction.instance.execute(required_args)
         when 'file' then
-          Confidelius::FileAction.execute(required_args, optional_args)
+          Confidelius::FileAction.instance.execute(required_args, optional_args)
       end
     end
 

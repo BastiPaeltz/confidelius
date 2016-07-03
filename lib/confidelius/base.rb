@@ -4,12 +4,27 @@ module Confidelius
 
     def init
       setup_tables
+      # TODO: encrypt db
+    end
+
+    def status
+      # TODO: show current state
+      # is session active or not?
+      # how many changes were made (and not saved yet) ?
     end
 
 
     def list
-      @db.execute('SELECT name from Session') do |row|
-        puts row
+      puts "Currently defined sessions:"
+      puts "name\tactive"
+      puts "----\t------"
+      puts
+      @db.execute('SELECT name, active from Session') do |row|
+        if row[1] == 1
+          puts "#{row[0]}\tyes"
+        else
+          puts "#{row[0]}\tno"
+        end
       end
     end
 
